@@ -1,0 +1,11 @@
+
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Jua&family=Lexend:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nabla&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-montserrat: "Jua", sans-serif;
+};
+
+html {
+  @apply scroll-smooth
+}
