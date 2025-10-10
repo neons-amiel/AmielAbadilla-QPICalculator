@@ -7,10 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "react-scripts start"
-    
-    
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tsparticles/react": "^3.0.0",
@@ -30,4 +27,3 @@
     "vite": "^7.1.7"
   }
 }
-
