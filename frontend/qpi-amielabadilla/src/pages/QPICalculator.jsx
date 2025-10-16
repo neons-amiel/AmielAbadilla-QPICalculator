@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, memo } from 'react';
 
 {/* Importing Components */}
 import ParticleBackground from '../components/CoolBg.jsx';
@@ -14,11 +15,66 @@ import mail from '../assets/Mail.png';
 
 function QPICalculator() {
 
+    const MemoizedParticles = memo(ParticleBackground);
+    const letters = ['A','B+','B','C+','C','D'];
+    const numUnits = [3,2,1];
 
+    const [courses, setCourses] = useState([
+        {code: '', grade:'', units:''}
+    ]);
 
+    const addCourse = () => {
+        setCourses([...courses, {code: '', grade: 'A', units: '3.0'}]);
+    };
+
+    const resetCourse = () => {
+        setCourses([]);
+    };
+
+    const handleChange = (index, field, value) => {
+        const updatedCourses = [...courses];
+        updatedCourses[index][field] = value;
+        setCourses(updatedCourses);
+    };
+
+    const bindField = (index, field) => ({
+        value: courses[index][field],
+        onChange: (e) => handleChange(index, field, e.target.value)
+    });
+
+    const gradePoint = {
+        'A' : 4.0,
+        'B+' : 3.5,
+        'B' : 3.0,
+        'C+' : 2.5,
+        'C' : 2.0,
+        'D' : 1.0,
+        'F' : 0.0,
+    }
+
+    const QPI = () => {
+        let totalPoints = 0;
+        let totalUnits = 0;
+
+        courses.forEach(course => {
+            const gradeValue = gradePoint[course.grade];
+            const units = parseFloat(course.units);
+
+            if (!isNaN(gradeValue) && !isNaN(units)) {
+                totalPoints += gradeValue * units;
+                totalUnits += units;
+            }
+        });
+
+        if(totalUnits === 0) return 0;
+        return(totalPoints/totalUnits).toFixed(2);
+
+    };
+    
     return (
+        
         <div className='min-h-screen w-full flex lg:flex-col flex-col font-montserrat m-0 p-0 '>
-            <ParticleBackground />
+            
             <div className='lg:px-20 px-3'>
                 
                 <div className='flex lg:flex-col flex-col justify-center items-center  py-10 gap-3 text-white '>
@@ -35,19 +91,21 @@ function QPICalculator() {
                         {/* Add Course and Reset Section */}
                         <div className='lg:w-1/2 w-full h-full flex flex-col border-teal-500 border-4 rounded-xl backdrop-blur-sm '>
                             <div class="w-full flex flex-row lg:justify-start justify-center lg:items-center items-start lg:p-10 p-5 gap-5">
-                                <div class=' cursor-pointer lg:w-1/3 w-1/2 h-12 flex justify-center items-center px-3 py-1 bg-pink-600 rounded-xl hover:bg-pink-400  '>
+                                <button  onClick={addCourse}
+                                class=' cursor-pointer lg:w-1/3 w-1/2 h-12 flex justify-center items-center px-3 py-1 bg-pink-600 rounded-xl hover:bg-pink-400  '>
                                     <p class='lg:text-xl text-sm'>+ Add Course</p>
-                                </div>
-                                <div class=' cursor-pointer lg:w-1/3 w-1/2 h-12 flex justify-center items-center px-3 py-1 bg-pink-600 rounded-xl hover:bg-pink-400'>
-                                    <p class='lg:text-xl text-sm'>Reset</p>
-                                </div>
+                                </button>
+                                <button onClick={resetCourse}
+                                 class=' cursor-pointer lg:w-1/3 w-1/2 h-12 flex justify-center items-center px-3 py-1 bg-pink-600 rounded-xl hover:bg-pink-400'>
+                                    <p class='lg:text-xl  text-sm'>Reset</p>
+                                </button>
 
                             </div>
 
                          {/* Course, Grades, Units Section */}
                             <div class='w-full flex flex-row lg:justify-start justify-center lg:items-center items-start lg:p-10 gap-5 p-5 '>
                                 <div class='w-1/3 flex justify-center text-center px-3 py-1 bg-teal-500 rounded-xl'>
-                                    <p class='lg:text-xl text-sm'>Course Code</p>
+                                    <p class='lg:text-xl  text-sm'>Course Code</p>
                                 </div>
                                 <div class='w-1/3 flex justify-center text-center px-3 py-1 bg-teal-500 rounded-xl'>
                                     <p class='lg:text-xl text-sm'>Letter Mark</p>
@@ -56,6 +114,43 @@ function QPICalculator() {
                                     <p class='lg:text-xl text-sm'>No. of Units</p>
                                 </div>
                             </div>
+                            <div class="w-full flex flex-col gap-5 lg:px-10 lg:pt-3 p-5">
+                                
+                                {courses.map((course, index) => (
+                                    <div key={index} class='w-full flex flex-row gap-5'>
+                                        <input type="text" {...bindField(index, 'code')}class='w-1/3 px-2 py-1 border rounded-xl text-center' />
+                                        <select name="" id=""  {...bindField(index, 'grade')} class='w-1/3 px-2 py-1 border rounded-xl text-center z-40'>
+                                            {letters.map((letter) => (
+                                                <option key={letter} value={letter} className='text-black rounded-md'>
+                                                     {letter}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <select name="" id="" {...bindField(index, 'units')} class='w-1/3 px-2 py-1 border rounded-xl text-center z-40' >
+                                            {numUnits.map((numUnits) => (
+                                                <option value={numUnits} key={numUnits}className='text-black rounded-md'>
+                                                    {numUnits}
+                                                </option>
+                                            ))}
+
+                                        </select>
+
+                                    </div>
+                                    
+                            
+                                    
+                                    
+                                )
+                            )}
+
+                            </div>
+                                
+
+
+                                
+                               
+
+                    
                             
 
                         </div>
@@ -64,7 +159,7 @@ function QPICalculator() {
                         <div className='lg:w-1/2 w-full h-full flex flex-col gap-5 backdrop-blur-sm text-white'>
                             <div className='w-full h-50 border-4 border-pink-600 rounded-xl flex flex-col justify-between items-center py-5 '>
                                 <h1 className='text-2xl'>Your QPI</h1>
-                                <h1 className='lg:text-9xl text-8xl'>4.00</h1>
+                                <h1 className='lg:text-9xl text-8xl'>{QPI()}</h1>
                             </div>
                             <div className='w-full h-15 bg-pink-600 flex justify-center items-center rounded-xl'>
                                 <h1 className='text-white text-md'>QPI Forecaster</h1>
@@ -73,11 +168,11 @@ function QPICalculator() {
                             <div className='w-full flex flex-row justify-center items-center gap-5 '>
                                 <div className='w-1/2 h-60 flex flex-col justify-between items-center lg:pt-4 lg:pb-10  p-4 border-4 rounded-xl border-pink-600'>
                                     <h1 className='mb-5 lg:text-2xl text-md'>Enter your Desired QPI</h1>
-                                    <input type="number" name='desired' placeholder='0.00' className=' p-2 rounded-xl h-30 w-3/4 lg:text-7xl text-4xl text-center' />
+                                    <input type="number" name='desired' placeholder='0.00' className=' p-2 rounded-xl h-30 w-8/10 lg:text-6xl text-4xl text-center' />
                                 </div>
                                 <div className='w-1/2 h-60 flex flex-col justify-between items-center lg:pt-4 lg:pb-10 p-4 border-4 rounded-xl border-pink-600'>
                                     <h1 className='mb-5 lg:text-2xl text-md'>Enter Units Left to Take</h1>
-                                    <input type="number" name='unitsLeft' placeholder='0.00' className=' p-2 rounded-xl h-30 w-3/4 lg:text-7xl text-4xl text-center' />
+                                    <input type="number" name='unitsLeft' placeholder='0.00' className=' p-2 rounded-xl h-30 w-8/10 lg:text-6xl text-4xl text-center' />
                                 </div>
 
                             </div>
