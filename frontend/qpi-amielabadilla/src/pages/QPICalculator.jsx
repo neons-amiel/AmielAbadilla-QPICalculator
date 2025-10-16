@@ -24,11 +24,15 @@ function QPICalculator() {
     ]);
 
     const addCourse = () => {
-        setCourses([...courses, {code: '', grade: 'A', units: '3.0'}]);
+        setCourses([...courses, {code: '', grade: 'A', units: '3'}]);
     };
 
     const resetCourse = () => {
         setCourses([]);
+    };
+
+    const removeCourse = (indexRemove) => {
+        setCourses(courses.filter((_, index) => index !== indexRemove));
     };
 
     const handleChange = (index, field, value) => {
@@ -104,24 +108,24 @@ function QPICalculator() {
 
                          {/* Course, Grades, Units Section */}
                             <div class='w-full flex flex-row lg:justify-start justify-center lg:items-center items-start lg:p-10 gap-5 p-5 '>
-                                <div class='w-1/3 flex justify-center text-center px-3 py-1 bg-teal-500 rounded-xl'>
+                                <div class='w-1/3   h-15 flex justify-center text-center items-center px-3 py-1 bg-teal-500 rounded-xl'>
                                     <p class='lg:text-xl  text-sm'>Course Code</p>
                                 </div>
-                                <div class='w-1/3 flex justify-center text-center px-3 py-1 bg-teal-500 rounded-xl'>
+                                <div class='w-1/3  h-15 flex justify-center text-center items-center px-3 py-1 bg-teal-500 rounded-xl'>
                                     <p class='lg:text-xl text-sm'>Letter Mark</p>
                                 </div>
-                                <div class='w-1/3 flex justify-center text-center px-3 py-1 bg-teal-500 rounded-xl'>
+                                <div class='w-1/3  h-15 flex justify-center text-center items-center  px-3 py-1 bg-teal-500 rounded-xl'>
                                     <p class='lg:text-xl text-sm'>No. of Units</p>
                                 </div>
                             </div>
-                            <div class="w-full flex flex-col gap-5 lg:px-10 lg:pt-3 p-5">
+                            <div class="w-full flex flex-col items-center justify-center gap-5 lg:px-10 lg:pt-3 p-5">
                                 
                                 {courses.map((course, index) => (
                                     <div key={index} class='w-full flex flex-row gap-5'>
                                         <input type="text" {...bindField(index, 'code')}class='w-1/3 px-2 py-1 border rounded-xl text-center' />
-                                        <select name="" id=""  {...bindField(index, 'grade')} class='w-1/3 px-2 py-1 border rounded-xl text-center z-40'>
+                                        <select name="" id=""  {...bindField(index, 'grade')} placeholder='' class='w-1/3 px-2 py-1 border rounded-xl text-center z-40 '>
                                             {letters.map((letter) => (
-                                                <option key={letter} value={letter} className='text-black rounded-md'>
+                                                <option key={letter} value={letter}  className='text-black rounded-md'>
                                                      {letter}
                                                 </option>
                                             ))}
@@ -134,6 +138,15 @@ function QPICalculator() {
                                             ))}
 
                                         </select>
+
+                                        <button
+                                            onClick={() => removeCourse(index)}
+                                            className="w-1/6 px-2 py-1 bg-red-500 hover:bg-red-400 rounded-xl text-white text-sm"
+                                            >
+                                            Delete
+                                        </button>
+
+                                    
 
                                     </div>
                                     
